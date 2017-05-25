@@ -47,7 +47,7 @@ plt.show()
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 
-# clf = GaussianNB()
+# K-nearest neighbors
 clf = KNeighborsClassifier()
 t0 = time()
 clf.fit(features_train, labels_train)
@@ -60,7 +60,6 @@ print "prediction time:", round(time()-t0,3), "s"
 accuracy = accuracy_score(labels_test, predition)
 print "Accuracy is", accuracy
 
-# K-nearest neighbors
 # random forest
 # adaboost (sometimes also called boosted decision tree)
 
