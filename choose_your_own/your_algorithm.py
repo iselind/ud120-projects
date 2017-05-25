@@ -3,7 +3,12 @@
 foo bar
 '''
 
+from time import time
+
+from sklearn.neighbors import KNeighborsClassifier
+
 import matplotlib.pyplot as plt
+
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
 
@@ -39,6 +44,21 @@ plt.show()
 # your code here!  name your classifier object clf if you want the
 # visualization code (prettyPicture) to show you the decision boundary
 
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+
+# clf = GaussianNB()
+clf = KNeighborsClassifier()
+t0 = time()
+clf.fit(features_train, labels_train)
+print "training time:", round(time()-t0,3), "s"
+
+t0 = time()
+predition = clf.predict(features_test)
+print "prediction time:", round(time()-t0,3), "s"
+
+accuracy = accuracy_score(labels_test, predition)
+print "Accuracy is", accuracy
 
 # K-nearest neighbors
 # random forest
