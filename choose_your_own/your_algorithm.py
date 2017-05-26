@@ -120,9 +120,20 @@ print "The winner used %s as criterion and %d estimators and %d as split" % (use
 evalutate(best_classifier, True, True)
 
 # adaboost (sometimes also called boosted decision tree)
+best_accuracy_so_far = 0
+best_classifier = None
+
+used_alg = None
+
 print
 print "AdaBoostClassifier"
-clf = AdaBoostClassifier()
-evalutate(clf, True, True)
+for alg in ['SAMME', 'SAMME.R']:
+    clf = AdaBoostClassifier(algorithm=alg)
+    tmp_acc = evalutate(clf)
+    if tmp_acc > best_accuracy_so_far:
+        best_accuracy_so_far = tmp_acc
+        best_classifier = clf
+        used_alg = alg
 
-
+print "The winner used %s as algorithm" % (used_alg, )
+evalutate(best_classifier, True, True)
