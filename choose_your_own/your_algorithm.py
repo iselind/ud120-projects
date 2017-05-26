@@ -6,6 +6,7 @@ foo bar
 from time import time
 
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
 
 import matplotlib.pyplot as plt
 
@@ -40,6 +41,29 @@ plt.ylabel("grade")
 plt.show()
 ##########################################################################
 
+def evalutate(clf, show_picture=False, print_info=False):
+    t0 = time()
+    clf.fit(features_train, labels_train)
+    if print_info:
+        print "training time:", round(time()-t0,3), "s" 
+
+    t0 = time()
+    predition = clf.predict(features_test)
+    if print_info:
+        print "prediction time:", round(time()-t0,3), "s"
+
+    accuracy = accuracy_score(labels_test, predition)
+    if print_info:
+        print "Accuracy is %.5f" % accuracy
+
+    if show_picture:
+        try:
+            prettyPicture(clf, features_test, labels_test)
+        except NameError:
+            print "Couldn't show picture for some reason"
+
+    return accuracy
+
 
 # your code here!  name your classifier object clf if you want the
 # visualization code (prettyPicture) to show you the decision boundary
@@ -47,24 +71,38 @@ plt.show()
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 
+best_accuracy_so_far = 0
+best_classifier = None
+
+used_weight = None
+used_neighbors = 0
+
 # K-nearest neighbors
-clf = KNeighborsClassifier()
-t0 = time()
-clf.fit(features_train, labels_train)
-print "training time:", round(time()-t0,3), "s"
+print
+print "KNeighborsClassifier..."
+for wight in ['distance', 'uniform']:
+    for neighbors in range(5,30,5):
+        clf = KNeighborsClassifier(weights=wight, n_neighbors=neighbors)
+        tmp_acc = evalutate(clf)
+        if tmp_acc > best_accuracy_so_far:
+            best_accuracy_so_far = tmp_acc
+            best_classifier = clf
+            used_weight = wight
+            used_neighbors = neighbors
 
-t0 = time()
-predition = clf.predict(features_test)
-print "prediction time:", round(time()-t0,3), "s"
-
-accuracy = accuracy_score(labels_test, predition)
-print "Accuracy is", accuracy
+print "The winner used %d neighbors and %s for weights" % (used_neighbors, used_weight)
+evalutate(best_classifier, True, True)
 
 # random forest
+print
+print "RandomForestClassifier"
+clf = RandomForestClassifier()
+evalutate(clf, True, True)
+
 # adaboost (sometimes also called boosted decision tree)
+print
+print "AdaBoostClassifier"
+clf = AdaBoostClassifier()
+evalutate(clf, True, True)
 
 
-try:
-    prettyPicture(clf, features_test, labels_test)
-except NameError:
-    pass
