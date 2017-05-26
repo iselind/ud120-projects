@@ -71,13 +71,13 @@ def evalutate(clf, show_picture=False, print_info=False):
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 
+# K-nearest neighbors
 best_accuracy_so_far = 0
 best_classifier = None
 
 used_weight = None
 used_neighbors = 0
 
-# K-nearest neighbors
 print
 print "KNeighborsClassifier..."
 for wight in ['distance', 'uniform']:
@@ -94,10 +94,30 @@ print "The winner used %d neighbors and %s for weights" % (used_neighbors, used_
 evalutate(best_classifier, True, True)
 
 # random forest
+best_accuracy_so_far = 0
+best_classifier = None
+
+used_crit = None
+used_est = 0
+used_split = 0
 print
 print "RandomForestClassifier"
-clf = RandomForestClassifier()
-evalutate(clf, True, True)
+for crit in ['gini', 'entropy']:
+    for estimators in range(5,30,5):
+        for split in range(2, 16, 2):
+            clf = RandomForestClassifier(criterion=crit,
+                    n_estimators=estimators,
+                    min_samples_split=split)
+            tmp_acc = evalutate(clf)
+            if tmp_acc > best_accuracy_so_far:
+                best_accuracy_so_far = tmp_acc
+                best_classifier = clf
+                used_crit = crit
+                used_est = estimators
+                used_split = split
+
+print "The winner used %s as criterion and %d estimators and %d as split" % (used_crit, used_est, used_split)
+evalutate(best_classifier, True, True)
 
 # adaboost (sometimes also called boosted decision tree)
 print
