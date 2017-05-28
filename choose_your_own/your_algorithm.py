@@ -56,11 +56,11 @@ def evalutate(clf, show_picture=False, print_info=False):
     if print_info:
         print "Accuracy is %.5f" % accuracy
 
-    if show_picture:
-        try:
-            prettyPicture(clf, features_test, labels_test)
-        except NameError:
-            print "Couldn't show picture for some reason"
+    # if show_picture:
+    #     try:
+    #         prettyPicture(clf, features_test, labels_test)
+    #     except NameError:
+    #         print "Couldn't show picture for some reason"
 
     return accuracy
 
@@ -81,7 +81,7 @@ used_neighbors = 0
 print
 print "KNeighborsClassifier..."
 for wight in ['distance', 'uniform']:
-    for neighbors in range(5,30,5):
+    for neighbors in range(5,30,1):
         clf = KNeighborsClassifier(weights=wight, n_neighbors=neighbors)
         tmp_acc = evalutate(clf)
         if tmp_acc > best_accuracy_so_far:
@@ -103,7 +103,7 @@ used_split = 0
 print
 print "RandomForestClassifier"
 for crit in ['gini', 'entropy']:
-    for estimators in range(5,30,5):
+    for estimators in range(5,30,1):
         for split in range(2, 16, 2):
             clf = RandomForestClassifier(criterion=crit,
                     n_estimators=estimators,
@@ -124,16 +124,27 @@ best_accuracy_so_far = 0
 best_classifier = None
 
 used_alg = None
+used_estimators = 0
+used_rate = 0
 
 print
 print "AdaBoostClassifier"
 for alg in ['SAMME', 'SAMME.R']:
-    clf = AdaBoostClassifier(algorithm=alg)
-    tmp_acc = evalutate(clf)
-    if tmp_acc > best_accuracy_so_far:
-        best_accuracy_so_far = tmp_acc
-        best_classifier = clf
-        used_alg = alg
+    for estimators in range(20, 100, 1):
+        for rate in range(5, 15, 1):
+            tmp_rate = float(rate)/10.0
+            clf = AdaBoostClassifier(algorithm=alg,
+                                     n_estimators=estimators,
+                                     learning_rate=tmp_rate)
+            tmp_acc = evalutate(clf)
+            if tmp_acc > best_accuracy_so_far:
+                best_accuracy_so_far = tmp_acc
+                best_classifier = clf
+                used_alg = alg
+                used_estimators = estimators
+                used_rate = tmp_rate
 
 print "The winner used %s as algorithm" % (used_alg, )
+print "with %d estimators" % used_estimators
+print "with a learning rate of %f" % used_rate
 evalutate(best_classifier, True, True)
