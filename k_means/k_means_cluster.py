@@ -4,7 +4,7 @@
     Skeleton code for k-means clustering mini-project.
 """
 
-
+from sklearn.cluster import KMeans
 
 
 import pickle
@@ -65,7 +65,8 @@ plt.show()
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
 
-
+kmeans = KMeans(n_clusters=2).fit(data)
+pred = kmeans.predict(data)
 
 
 ### rename the "name" parameter when you change the number of features
