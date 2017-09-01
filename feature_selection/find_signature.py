@@ -50,7 +50,8 @@ mymax = max(clf.feature_importances_)
 print "Feature importances:", mymax
 idx = 0
 for importance in clf.feature_importances_:
-    if importance == mymax:
-        break
+    if importance > 0.2:
+        print "Idx of this importance:", idx
+        print "Offending word is:", vectorizer.get_feature_names()[idx]
+        print ""
     idx += 1
-print "Idx of this importance:", idx

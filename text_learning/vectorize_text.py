@@ -52,7 +52,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
             stemmed_email = parseOutText(email)
 
             ### use str.replace() to remove any instances of the words
-            remove_these = ["sara", "shackleton", "chris", "germani"]
+            remove_these = ["cgermannsf", "sshacklensf", "sara", "shackleton", "chris", "germani"]
             for word in remove_these:
                 stemmed_email = stemmed_email.replace(word, "")
 
