@@ -7,6 +7,7 @@ import sys
 
 sys.path.append( "../tools/" )
 from parse_out_email_text import parseOutText
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 """
     Starter code to process the emails from Sara and Chris to extract
@@ -71,7 +72,7 @@ print "emails processed"
 from_sara.close()
 from_chris.close()
 
-print word_data[152]
+print "".join(word_data[152])
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
@@ -80,5 +81,17 @@ pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
 
 ### in Part 4, do TfIdf vectorization here
-
-
+"""
+Transform the word_data into a tf-idf matrix using the sklearn TfIdf
+transformation. Remove english stopwords.
+"""
+vec = TfidfVectorizer(stop_words="english")
+# vectorized_word_data is matrix of word position, weight
+# not needed to answer on "Text Learning" lesson assignment questions
+vectorized_word_data = vec.fit_transform(word_data)
+# that's a list of feature names
+vocab_list = vec.get_feature_names()
+# len of unique words
+print(len(vocab_list))
+# feature name, assignment is asking for
+print(vocab_list[34597])
