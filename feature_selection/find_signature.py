@@ -40,4 +40,17 @@ labels_train   = labels_train[:150]
 ### your code goes here
 
 
-
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+print "Score is:", accuracy_score(labels_test, pred)
+mymax = max(clf.feature_importances_)
+print "Feature importances:", mymax
+idx = 0
+for importance in clf.feature_importances_:
+    if importance == mymax:
+        break
+    idx += 1
+print "Idx of this importance:", idx
