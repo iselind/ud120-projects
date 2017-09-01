@@ -42,10 +42,10 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        temp_counter += 1
+        #temp_counter += 1
         if temp_counter < 200:
             path = os.path.join('..', path[:-1])
-            print path
+            #print path
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
@@ -53,8 +53,8 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
 
             ### use str.replace() to remove any instances of the words
             remove_these = ["sara", "shackleton", "chris", "germani"]
-            stemmed_email = [ x for x in stemmed_email if x not in
-                             remove_these]
+            for word in remove_these:
+                stemmed_email = stemmed_email.replace(word, "")
 
             ### append the text to word_data
             word_data.append(stemmed_email)
@@ -72,7 +72,7 @@ print "emails processed"
 from_sara.close()
 from_chris.close()
 
-print "".join(word_data[152])
+print word_data[152]
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
@@ -88,6 +88,7 @@ transformation. Remove english stopwords.
 vec = TfidfVectorizer(stop_words="english")
 # vectorized_word_data is matrix of word position, weight
 # not needed to answer on "Text Learning" lesson assignment questions
+#print word_data
 vectorized_word_data = vec.fit_transform(word_data)
 # that's a list of feature names
 vocab_list = vec.get_feature_names()
