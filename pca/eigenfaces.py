@@ -18,6 +18,7 @@ The dataset used in this example is a preprocessed excerpt of the
 
 print __doc__
 
+import sys
 from time import time
 import logging
 import pylab as pl
@@ -66,12 +67,19 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 ###############################################################################
 # Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
 # dataset): unsupervised feature extraction / dimensionality reduction
-n_components = 150
+if len(sys.argv) ==1:
+    n_components = 150
+else:
+    n_components = int(sys.argv[1])
+
+print "n_components has the value", n_components
 
 print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0])
 t0 = time()
 pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
 print "done in %0.3fs" % (time() - t0)
+
+print "Explained variance:", pca.explained_variance_ratio_
 
 eigenfaces = pca.components_.reshape((n_components, h, w))
 
